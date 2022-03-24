@@ -7,14 +7,22 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -23,15 +31,26 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 import jmDNS.ServiceRegistration;
 
 public class SmartGUIclient {
 
 	private JFrame frame;
-	
+	private static int climatePort = 50099;
+	private static int lightPort = 50097;
+	private static int utilityPort = 50098;
 	public JLabel lightDataId;
 	public JLabel lightDataStatus;
 	public JLabel lightDataIntensity;
+	public static int randomCo = (int) (Math.random() * 100 + 1);
+	private static final int MIN = 1;
+	private static final int MAX = 5;
+	private static final int DEFAULT = 1;
+	public static JSpinner HTemp;
 	public static JTextField messages;
 
 	public static class Listener implements ServiceListener {
@@ -44,7 +63,15 @@ public class SmartGUIclient {
 		}
 
 		public void serviceResolved(ServiceEvent serviceEvent) {
-			
+			System.out.println("Service resolved: " + serviceEvent.getInfo());
+			// Ports for connections will be designated according to each event
+			if (serviceEvent.getName().equals("climate")) {
+				climatePort = serviceEvent.getInfo().getPort();
+			} else if (serviceEvent.getName().equals("light")) {
+				lightPort = serviceEvent.getInfo().getPort();
+			} else if (serviceEvent.getName().equals("utility")) {
+				utilityPort = serviceEvent.getInfo().getPort();
+			}
 		}
 	}
 
@@ -68,6 +95,18 @@ public class SmartGUIclient {
 
 		initialize();
 		ServiceRegistration reg = new ServiceRegistration();
+
+		try {
+			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
+			jmdns.addServiceListener("_http._tcp.local.", new SmartGUIclient.Listener());
+			jmdns.addServiceListener("_http._tcp.local.", new SmartGUIclient.Listener());
+			jmdns.addServiceListener("_http._tcp.local.", new SmartGUIclient.Listener());
+		} catch (UnknownHostException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Initialize the frame
@@ -176,7 +215,16 @@ public class SmartGUIclient {
 		hvacOn.setBounds(166, 151, 65, 23);
 		frame.getContentPane().add(hvacOn);
 		hvacOn.setSelected(true);
-		
+		hvacOn.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (hvacOn.isSelected()) {
+					hvacOn.setText("Off");
+				} else {
+					hvacOn.setText("On");
+				}
+			}
+		});
+
 		final JSpinner HTemp = new JSpinner();
 		HTemp.setModel(new SpinnerNumberModel(15, 15, 35, 1));
 		HTemp.setBounds(264, 258, 43, 22);
@@ -342,6 +390,18 @@ public class SmartGUIclient {
 				}
 			}
 		});
+
+		final JSlider sliderbritness = new JSlider(JSlider.HORIZONTAL, MIN, MAX, DEFAULT);
+		sliderbritness.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				lightIntensity(sliderbritness.getValue());
+			}
+		});
+		sliderbritness.setBounds(20, 247, 200, 39);
+		frame.getContentPane().add(sliderbritness);
+		sliderbritness.setMajorTickSpacing(1);
+		sliderbritness.setPaintTicks(true);
+		sliderbritness.setPaintLabels(true);
 	}
 
 	// gRPC & HVAC Services
