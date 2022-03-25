@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.services.climate";
+option java_outer_classname = "ClimateServiceImpl";
+
+package Climate;
+
+service ClimateService {
+
+	rpc HvacOnOff(SwitchRequest) returns (SwitchResponse) {}; //Unary
+
+	rpc HvacTemperature(HvacRequest) returns (stream HvacResponse) {}; //server-side stream
+	
+	rpc checkCO (CoLevelRequest) returns (ExtractionResponse) {}; //unary 
+}
+
+message SwitchRequest {
+	bool power = 1;
+}
+
+message SwitchResponse {
+	bool power = 1;
+}
+
+message HvacRequest {
+	int32 temp = 1;
+}
+
+message HvacResponse {
+	int32 temp = 1;
+}
+
+message CoLevelRequest {
+	int32 level = 1;
+}
+
+message ExtractionResponse {
+	int32 level = 1;
+}
