@@ -481,7 +481,7 @@ public class SmartGUIclient {
 
 		StreamObserver<HvacResponse> responseObserver = new StreamObserver<HvacResponse>() {
 			public void onNext(HvacResponse value) {
-				messages.setText("Changing temperature to: " + value.getTemp() + "°C");
+				messages.setText("Changing the temperature to: " + value.getTemp() + "°C");
 			}
 
 			public void onError(Throwable t) {
@@ -490,7 +490,7 @@ public class SmartGUIclient {
 			}
 
 			public void onCompleted() {
-				messages.setText("Room reached the selected temperature: " + newTemp + "°C");
+				messages.setText("Room has reached the selected temperature: " + newTemp + "°C");
 			}
 		};
 
@@ -515,11 +515,11 @@ public class SmartGUIclient {
 			return;
 		}
 		if (CoNow > 40) {
-			messages.setText("CO level is: " + response.getLevel() + " now");
-			messages.setText("High levels of CO, HVAC turned on");
+			messages.setText("CO Level is: " + response.getLevel() + " now");
+			messages.setText("High Levels of CO, HVAC turned on");
 		} else {
-			messages.setText("CO level: " + response.getLevel());
-			messages.setText("CO level Stable");
+			messages.setText("CO Level: " + response.getLevel());
+			messages.setText("CO Levels Stable");
 		}
 
 	}

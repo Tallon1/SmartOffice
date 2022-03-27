@@ -7,13 +7,13 @@ option java_outer_classname = "ClimateServiceImpl";
 package Climate;
 
 service ClimateService {
-	// Unary RPC
+	// Simple RPC
 	rpc HvacOnOff(SwitchRequest) returns (SwitchResponse) {};
 
 	// Server-side stream
 	rpc HvacTemperature(HvacRequest) returns (stream HvacResponse) {};
 	
-	// Unary RPC
+	// Simple RPC
 	rpc checkCO (CoLevelRequest) returns (ExtractionResponse) {};
 }
 

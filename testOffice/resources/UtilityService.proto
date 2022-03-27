@@ -7,13 +7,13 @@ option java_outer_classname = "UtilityServiceImpl";
 package Utility;
 
 service UtilityService {
-	//Unary RPC
+	// Simple RPC
 	rpc switchDevices (DevicesRequest) returns (DevicesResponse) {};
 
-	//Unary RPC
+	// Simple RPC
 	rpc switchCameraOn (CameraRequest) returns (CameraResponse) {};
 	
-	//Bidirectional
+	// Bidirectional Streaming
 	rpc printList(stream PrinterRequest) returns (stream PrinterResponse) {};
 }
 
