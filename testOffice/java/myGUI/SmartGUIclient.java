@@ -54,6 +54,7 @@ import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.LineBorder;
 
 public class SmartGUIclient {
 
@@ -151,33 +152,33 @@ public class SmartGUIclient {
 
 		// Frame, labels & separators
 		frame = new JFrame("Smart Office Dashboard");
-		frame.getContentPane().setForeground(new Color(255, 228, 225));
+		frame.getContentPane().setForeground(new Color(255, 0, 0));
 		frame.setBounds(100, 100, 406, 590);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		frame.getContentPane().setBackground(SystemColor.inactiveCaptionBorder);
+		frame.getContentPane().setBackground(new Color(153, 255, 255));
 
 		JLabel TitleLabel = new JLabel("Tallon Smart Office Solutions");
 		TitleLabel.setForeground(SystemColor.desktop);
 		TitleLabel.setFont(new Font("Microsoft Tai Le", Font.BOLD | Font.ITALIC, 26));
-		TitleLabel.setBounds(15, 0, 385, 52);
+		TitleLabel.setBounds(15, 0, 367, 52);
 		frame.getContentPane().add(TitleLabel);
 
 		JLabel dashWelcome = new JLabel("Welcome to your Dashboard!");
 		dashWelcome.setForeground(SystemColor.desktop);
-		dashWelcome.setBounds(100, 50, 218, 16);
+		dashWelcome.setBounds(91, 51, 216, 16);
 		frame.getContentPane().add(dashWelcome);
 		dashWelcome.setFont(new Font("Tahoma", Font.BOLD, 15));
 
 		JLabel logo = new JLabel("");
-		logo.setBounds(2, 390, 166, 128);
+		logo.setBounds(2, 390, 196, 128);
 		frame.getContentPane().add(logo);
 		ImageIcon img = new ImageIcon(this.getClass().getResource("/logo.png"));
 		logo.setIcon(img);
 
 		JLabel controls = new JLabel("CONTROLS");
 		controls.setForeground(SystemColor.desktop);
-		controls.setBounds(158, 198, 100, 25);
+		controls.setBounds(145, 196, 108, 25);
 		frame.getContentPane().add(controls);
 		controls.setFont(new Font("Tahoma", Font.BOLD, 18));
 
@@ -190,54 +191,60 @@ public class SmartGUIclient {
 		JLabel monitor = new JLabel("MONITOR");
 		monitor.setForeground(SystemColor.desktop);
 		monitor.setFont(new Font("Tahoma", Font.BOLD, 18));
-		monitor.setBounds(46, 304, 105, 25);
+		monitor.setBounds(46, 304, 100, 25);
 		frame.getContentPane().add(monitor);
 
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(10, 77, 395, 2);
+		separator_1.setBackground(SystemColor.desktop);
+		separator_1.setBounds(4, 77, 380, 3);
 		frame.getContentPane().add(separator_1);
 
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(10, 184, 377, 2);
+		separator_2.setBackground(SystemColor.desktop);
+		separator_2.setBounds(4, 184, 380, 2);
 		frame.getContentPane().add(separator_2);
 
 		JSeparator separator_2_1 = new JSeparator();
-		separator_2_1.setBounds(10, 291, 377, 2);
+		separator_2_1.setBackground(SystemColor.desktop);
+		separator_2_1.setBounds(4, 291, 380, 2);
 		frame.getContentPane().add(separator_2_1);
 
 		JSeparator separator_3 = new JSeparator();
+		separator_3.setBackground(SystemColor.desktop);
 		separator_3.setOrientation(SwingConstants.VERTICAL);
-		separator_3.setBounds(194, 306, 2, 212);
+		separator_3.setBounds(196, 296, 2, 218);
 		frame.getContentPane().add(separator_3);
 
 		messages = new JTextField();
-		messages.setBackground(SystemColor.inactiveCaptionBorder);
-		messages.setBounds(2, 518, 385, 25);
+		messages.setBorder(new LineBorder(SystemColor.desktop));
+		messages.setFont(new Font("Tahoma", Font.BOLD, 12));
+		messages.setBackground(new Color(153, 255, 255));
+		messages.setBounds(0, 518, 388, 26);
 		frame.getContentPane().add(messages);
 		messages.setColumns(10);
 
 		// Climate buttons & labels
 		JLabel hvacLabel = new JLabel("HVAC");
 		hvacLabel.setForeground(SystemColor.desktop);
-		hvacLabel.setBounds(179, 126, 41, 14);
+		hvacLabel.setBounds(177, 127, 41, 14);
 		frame.getContentPane().add(hvacLabel);
-		hvacLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		hvacLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-		JLabel coLabel = new JLabel("CO level");
+		JLabel coLabel = new JLabel("CO Level");
 		coLabel.setForeground(SystemColor.desktop);
-		coLabel.setBounds(32, 341, 65, 14);
+		coLabel.setBounds(15, 341, 79, 21);
 		frame.getContentPane().add(coLabel);
-		coLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		coLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		JLabel tempLabel = new JLabel("Temperature");
 		tempLabel.setForeground(SystemColor.desktop);
-		tempLabel.setBounds(277, 233, 79, 14);
+		tempLabel.setBounds(268, 233, 99, 25);
 		frame.getContentPane().add(tempLabel);
-		tempLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tempLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		JButton coButton = new JButton("Check");
-		coButton.setFont(new Font("Tahoma", Font.BOLD, 11));
-		coButton.setBounds(91, 339, 75, 23);
+		coButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		coButton.setBounds(104, 339, 75, 23);
 		coButton.setBorderPainted(false);
 		coButton.setBackground(SystemColor.activeCaption);
 		frame.getContentPane().add(coButton);
@@ -248,8 +255,8 @@ public class SmartGUIclient {
 		});
 
 		final JToggleButton hvacOn = new JToggleButton("Off");
-		hvacOn.setFont(new Font("Tahoma", Font.BOLD, 11));
-		hvacOn.setBounds(166, 151, 65, 23);
+		hvacOn.setFont(new Font("Tahoma", Font.BOLD, 13));
+		hvacOn.setBounds(165, 151, 65, 23);
 		frame.getContentPane().add(hvacOn);
 		hvacOn.setSelected(true);
 		hvacOn.addChangeListener(new ChangeListener() {
@@ -265,18 +272,20 @@ public class SmartGUIclient {
 		});
 
 		final JSpinner HTemp = new JSpinner();
+		HTemp.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		HTemp.setModel(new SpinnerNumberModel(15, 15, 35, 1));
 		HTemp.setBounds(264, 258, 43, 22);
 		frame.getContentPane().add(HTemp);
 
 		JButton btnNewButton = new JButton("OK");
+		btnNewButton.setBorder(new LineBorder(SystemColor.desktop));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				HvacTemperature(HTemp.getValue());
 			}
 		});
 		
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 8));
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 10));
 		coButton.setBorderPainted(false);
 		coButton.setBackground(SystemColor.activeCaption);
 		btnNewButton.setBounds(317, 258, 46, 23);
@@ -285,25 +294,25 @@ public class SmartGUIclient {
 		// Utility buttons & labels
 		JLabel deviceLabel = new JLabel("Devices");
 		deviceLabel.setForeground(SystemColor.desktop);
-		deviceLabel.setBounds(44, 126, 93, 14);
+		deviceLabel.setBounds(37, 127, 93, 14);
 		frame.getContentPane().add(deviceLabel);
-		deviceLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		deviceLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-		JLabel VisitLabel = new JLabel("Visit list");
+		JLabel VisitLabel = new JLabel("Visitor List");
 		VisitLabel.setForeground(SystemColor.desktop);
-		VisitLabel.setBounds(32, 381, 59, 14);
+		VisitLabel.setBounds(15, 379, 79, 21);
 		frame.getContentPane().add(VisitLabel);
-		VisitLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		VisitLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		JLabel cameraLabel = new JLabel("Cameras");
 		cameraLabel.setForeground(SystemColor.desktop);
-		cameraLabel.setBounds(304, 126, 59, 14);
+		cameraLabel.setBounds(296, 127, 65, 14);
 		frame.getContentPane().add(cameraLabel);
-		cameraLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		cameraLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		final JToggleButton deviceOnOff = new JToggleButton("Off");
-		deviceOnOff.setFont(new Font("Tahoma", Font.BOLD, 11));
-		deviceOnOff.setBounds(32, 150, 62, 23);
+		deviceOnOff.setFont(new Font("Tahoma", Font.BOLD, 13));
+		deviceOnOff.setBounds(32, 151, 62, 23);
 		frame.getContentPane().add(deviceOnOff);
 		deviceOnOff.setSelected(true);
 		deviceOnOff.addChangeListener(new ChangeListener() {
@@ -319,7 +328,7 @@ public class SmartGUIclient {
 		});
 
 		JButton printLabel = new JButton("Print");
-		printLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		printLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		printLabel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				printList();
@@ -328,12 +337,12 @@ public class SmartGUIclient {
 		
 		printLabel.setBorderPainted(false);
 		printLabel.setBackground(SystemColor.activeCaption);
-		printLabel.setBounds(91, 379, 75, 23);
+		printLabel.setBounds(104, 379, 75, 23);
 		frame.getContentPane().add(printLabel);
 
 		final JToggleButton cameraOnOff = new JToggleButton("Off");
-		cameraOnOff.setFont(new Font("Tahoma", Font.BOLD, 11));
-		cameraOnOff.setBounds(304, 151, 59, 23);
+		cameraOnOff.setFont(new Font("Tahoma", Font.BOLD, 13));
+		cameraOnOff.setBounds(297, 151, 59, 23);
 		frame.getContentPane().add(cameraOnOff);
 		cameraOnOff.setSelected(true);
 		cameraOnOff.addChangeListener(new ChangeListener() {
@@ -357,31 +366,31 @@ public class SmartGUIclient {
 
 		JLabel intensityLabel = new JLabel("Brightness");
 		intensityLabel.setForeground(SystemColor.desktop);
-		intensityLabel.setBounds(32, 222, 75, 14);
+		intensityLabel.setBounds(23, 222, 98, 25);
 		frame.getContentPane().add(intensityLabel);
-		intensityLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		intensityLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		JLabel office1light = new JLabel("Office 1");
 		office1light.setForeground(SystemColor.desktop);
-		office1light.setBounds(206, 364, 59, 14);
+		office1light.setBounds(215, 341, 59, 21);
 		frame.getContentPane().add(office1light);
-		office1light.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		office1light.setFont(new Font("Tahoma", Font.BOLD, 14));
 
 		JLabel office2light = new JLabel("Office 2");
 		office2light.setForeground(SystemColor.desktop);
-		office2light.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		office2light.setBounds(206, 415, 59, 14);
+		office2light.setFont(new Font("Tahoma", Font.BOLD, 14));
+		office2light.setBounds(215, 415, 59, 21);
 		frame.getContentPane().add(office2light);
 
 		JLabel receptionlight = new JLabel("Reception");
 		receptionlight.setForeground(SystemColor.desktop);
-		receptionlight.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		receptionlight.setBounds(206, 465, 75, 14);
+		receptionlight.setFont(new Font("Tahoma", Font.BOLD, 14));
+		receptionlight.setBounds(215, 485, 75, 21);
 		frame.getContentPane().add(receptionlight);
 
 		final JToggleButton of1lightbutton = new JToggleButton("Off");
-		of1lightbutton.setFont(new Font("Tahoma", Font.BOLD, 11));
-		of1lightbutton.setBounds(297, 362, 59, 23);
+		of1lightbutton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		of1lightbutton.setBounds(317, 341, 59, 23);
 		frame.getContentPane().add(of1lightbutton);
 		of1lightbutton.setSelected(true);
 		of1lightbutton.addChangeListener(new ChangeListener() {
@@ -397,9 +406,9 @@ public class SmartGUIclient {
 		});
 
 		final JToggleButton of2lightbutton = new JToggleButton("Off");
-		of2lightbutton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		of2lightbutton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		of2lightbutton.setSelected(true);
-		of2lightbutton.setBounds(297, 413, 59, 23);
+		of2lightbutton.setBounds(317, 415, 59, 23);
 		frame.getContentPane().add(of2lightbutton);
 		of2lightbutton.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -414,9 +423,9 @@ public class SmartGUIclient {
 		});
 
 		final JToggleButton reclightbutton = new JToggleButton("Off");
-		reclightbutton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		reclightbutton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		reclightbutton.setSelected(true);
-		reclightbutton.setBounds(297, 463, 59, 23);
+		reclightbutton.setBounds(317, 485, 59, 23);
 		frame.getContentPane().add(reclightbutton);
 		reclightbutton.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -431,6 +440,8 @@ public class SmartGUIclient {
 		});
 
 		final JSlider sliderbritness = new JSlider(JSlider.HORIZONTAL, MIN, MAX, DEFAULT);
+		sliderbritness.setFont(new Font("Tahoma", Font.BOLD, 10));
+		sliderbritness.setBackground(new Color(153, 255, 255));
 		sliderbritness.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				lightIntensity(sliderbritness.getValue());
@@ -505,10 +516,10 @@ public class SmartGUIclient {
 		}
 		if (CoNow > 40) {
 			messages.setText("CO level is: " + response.getLevel() + " now");
-			messages.setText("High levels of CO, HVAC on!");
+			messages.setText("High levels of CO, HVAC turned on");
 		} else {
 			messages.setText("CO level: " + response.getLevel());
-			messages.setText("CO level Stable!");
+			messages.setText("CO level Stable");
 		}
 
 	}
@@ -528,9 +539,9 @@ public class SmartGUIclient {
 
 		Boolean statusLight = response.getSwitch();
 		if (statusLight) {
-			messages.setText("Lights off!");
+			messages.setText("Lights off");
 		} else {
-			messages.setText("Lights on!");
+			messages.setText("Lights on");
 		}
 	}
 
@@ -597,9 +608,9 @@ public class SmartGUIclient {
 			return;
 		}
 		if (response.getCamera()) {
-			messages.setText("Camera off!");
+			messages.setText("Camera off");
 		} else {
-			messages.setText("Camera on!");
+			messages.setText("Camera on");
 		}
 	}
 	
@@ -642,11 +653,11 @@ public class SmartGUIclient {
 		}
 
 		requestObserver.onCompleted();
-		messages.setText("\nVisitor List: " + listOfVisits.size());
+		messages.setText("\nVisitors List: " + listOfVisits.size());
 		for (String visits : listOfVisits) {
-			messages.setText("Printing visit list: ");
+			messages.setText("Printing Visitors List: ");
 			JOptionPane.showMessageDialog(null, visits);
-			System.out.println("Printing visit list: " + visits);
+			System.out.println("Printing Visitors List: " + visits);
 		}
 	}
 }

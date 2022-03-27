@@ -90,16 +90,16 @@ public class ClimateClient {
 		final int newTemp = request.getTemp();
 
 		// Notification for method invocation
-		System.out.println("Requesting temperature change to " + request.getTemp() + " 째C");
+		System.out.println("Requesting temperature change to " + request.getTemp() + "캜");
 
 		StreamObserver<HvacResponse> responseObserver = new StreamObserver<HvacResponse>() {
 
 			// Min & max temperature check
 			public void onNext(HvacResponse value) {
 				if (newTemp > 35 || newTemp < 15) {// start if
-					System.out.println("Select temperature between 15째C & 35째C ");
+					System.out.println("Select temperature between 15캜 & 35캜 ");
 				} else {
-					System.out.println("Changing temperature to: " + value.getTemp() + " 째C");
+					System.out.println("Changing temperature to: " + value.getTemp() + "캜");
 				}
 			}
 
@@ -108,7 +108,7 @@ public class ClimateClient {
 			}
 
 			public void onCompleted() {
-				System.out.println("Room reached the selected temperature: " + request.getTemp() + "째C");
+				System.out.println("Room reached the selected temperature: " + request.getTemp() + "캜");
 			}
 		};
 

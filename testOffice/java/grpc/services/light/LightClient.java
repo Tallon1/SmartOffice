@@ -117,7 +117,7 @@ public class LightClient {
 
 		StreamObserver<IntensityRequest> requestObserver = lasyncStub.lightIntensity(responseObserver);
 		try {
-			// Simulates a few requests from client to change temperature
+			// Simulates a few requests from client to change brightness
 			requestObserver.onNext(IntensityRequest.newBuilder().setIntensity(1).build());
 			System.out.println("Lights brightness changed to: 1");
 			requestObserver.onNext(IntensityRequest.newBuilder().setIntensity(3).build());

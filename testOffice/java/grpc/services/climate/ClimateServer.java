@@ -75,7 +75,7 @@ public class ClimateServer extends ClimateServiceImplBase {
 	public void hvacTemperature(HvacRequest request, StreamObserver<HvacResponse> responseObserver) {
 		int newTemp = request.getTemp();
 
-		System.out.println("Receiving request to change temperature to: " + newTemp + "Â°C");
+		System.out.println("Receiving request to change temperature to: " + newTemp + "°C");
 		try {
 			// Requests changes of temperature
 			HvacResponse response = HvacResponse.newBuilder().setTemp(newTemp + 3).build();
@@ -109,7 +109,7 @@ public class ClimateServer extends ClimateServiceImplBase {
 			e.printStackTrace();
 		}
 		responseObserver.onCompleted();
-		System.out.println("Room reached the selected temperature: " + newTemp + "Â°C");
+		System.out.println("Room reached the selected temperature: " + newTemp + "°C");
 	}
 
 	// Checks CO levels in the room

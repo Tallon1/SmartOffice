@@ -30,7 +30,7 @@ public class ServiceRegistration {
 			System.out.println("Service Registration Underway! ");
 
 			// Simulates a short delay
-			Thread.sleep(10000);
+			Thread.sleep(5000);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
