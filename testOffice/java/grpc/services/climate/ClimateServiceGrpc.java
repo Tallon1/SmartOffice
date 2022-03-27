@@ -1,22 +1,15 @@
 package grpc.services.climate;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
 import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ClientCalls.asyncUnaryCall;
 import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
 import static io.grpc.stub.ClientCalls.blockingUnaryCall;
 import static io.grpc.stub.ClientCalls.futureUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-/**
- */
 @javax.annotation.Generated(value = "by gRPC proto compiler (version 1.15.0)", comments = "Source: ClimateService.proto")
 public final class ClimateServiceGrpc {
 
@@ -25,7 +18,7 @@ public final class ClimateServiceGrpc {
 
 	public static final String SERVICE_NAME = "Climate.ClimateService";
 
-	// Static method descriptors that strictly reflect the proto.
+	// Static method descriptors which directly reflects the proto.
 	private static volatile io.grpc.MethodDescriptor<grpc.services.climate.SwitchRequest, grpc.services.climate.SwitchResponse> getHvacOnOffMethod;
 
 	@io.grpc.stub.annotations.RpcMethod(fullMethodName = SERVICE_NAME + '/'
@@ -98,49 +91,34 @@ public final class ClimateServiceGrpc {
 		return getCheckCOMethod;
 	}
 
-	/**
-	 * Creates a new async stub that supports all call types for the service
-	 */
+	// Creates a new async stub that supports all call types for the service
 	public static ClimateServiceStub newStub(io.grpc.Channel channel) {
 		return new ClimateServiceStub(channel);
 	}
 
-	/**
-	 * Creates a new blocking-style stub that supports unary and streaming output
-	 * calls on the service
-	 */
+
+	// Creates a new blocking-style stub that supports unary & streaming output calls on the service
 	public static ClimateServiceBlockingStub newBlockingStub(io.grpc.Channel channel) {
 		return new ClimateServiceBlockingStub(channel);
 	}
 
-	/**
-	 * Creates a new ListenableFuture-style stub that supports unary calls on the
-	 * service
-	 */
+	// Creates a new ListenableFuture-style stub that supports unary calls on the service
 	public static ClimateServiceFutureStub newFutureStub(io.grpc.Channel channel) {
 		return new ClimateServiceFutureStub(channel);
 	}
 
-	/**
-	 */
 	public static abstract class ClimateServiceImplBase implements io.grpc.BindableService {
 
-		/**
-		 */
 		public void hvacOnOff(grpc.services.climate.SwitchRequest request,
 				io.grpc.stub.StreamObserver<grpc.services.climate.SwitchResponse> responseObserver) {
 			asyncUnimplementedUnaryCall(getHvacOnOffMethod(), responseObserver);
 		}
 
-		/**
-		 */
 		public void hvacTemperature(grpc.services.climate.HvacRequest request,
 				io.grpc.stub.StreamObserver<grpc.services.climate.HvacResponse> responseObserver) {
 			asyncUnimplementedUnaryCall(getHvacTemperatureMethod(), responseObserver);
 		}
 
-		/**
-		 */
 		public void checkCO(grpc.services.climate.CoLevelRequest request,
 				io.grpc.stub.StreamObserver<grpc.services.climate.ExtractionResponse> responseObserver) {
 			asyncUnimplementedUnaryCall(getCheckCOMethod(), responseObserver);
@@ -161,8 +139,6 @@ public final class ClimateServiceGrpc {
 		}
 	}
 
-	/**
-	 */
 	public static final class ClimateServiceStub extends io.grpc.stub.AbstractStub<ClimateServiceStub> {
 		private ClimateServiceStub(io.grpc.Channel channel) {
 			super(channel);
@@ -177,31 +153,23 @@ public final class ClimateServiceGrpc {
 			return new ClimateServiceStub(channel, callOptions);
 		}
 
-		/**
-		 */
 		public void hvacOnOff(grpc.services.climate.SwitchRequest request,
 				io.grpc.stub.StreamObserver<grpc.services.climate.SwitchResponse> responseObserver) {
 			asyncUnaryCall(getChannel().newCall(getHvacOnOffMethod(), getCallOptions()), request, responseObserver);
 		}
 
-		/**
-		 */
 		public void hvacTemperature(grpc.services.climate.HvacRequest request,
 				io.grpc.stub.StreamObserver<grpc.services.climate.HvacResponse> responseObserver) {
 			asyncServerStreamingCall(getChannel().newCall(getHvacTemperatureMethod(), getCallOptions()), request,
 					responseObserver);
 		}
 
-		/**
-		 */
 		public void checkCO(grpc.services.climate.CoLevelRequest request,
 				io.grpc.stub.StreamObserver<grpc.services.climate.ExtractionResponse> responseObserver) {
 			asyncUnaryCall(getChannel().newCall(getCheckCOMethod(), getCallOptions()), request, responseObserver);
 		}
 	}
 
-	/**
-	 */
 	public static final class ClimateServiceBlockingStub extends io.grpc.stub.AbstractStub<ClimateServiceBlockingStub> {
 		private ClimateServiceBlockingStub(io.grpc.Channel channel) {
 			super(channel);
@@ -216,28 +184,20 @@ public final class ClimateServiceGrpc {
 			return new ClimateServiceBlockingStub(channel, callOptions);
 		}
 
-		/**
-		 */
 		public grpc.services.climate.SwitchResponse hvacOnOff(grpc.services.climate.SwitchRequest request) {
 			return blockingUnaryCall(getChannel(), getHvacOnOffMethod(), getCallOptions(), request);
 		}
 
-		/**
-		 */
 		public java.util.Iterator<grpc.services.climate.HvacResponse> hvacTemperature(
 				grpc.services.climate.HvacRequest request) {
 			return blockingServerStreamingCall(getChannel(), getHvacTemperatureMethod(), getCallOptions(), request);
 		}
 
-		/**
-		 */
 		public grpc.services.climate.ExtractionResponse checkCO(grpc.services.climate.CoLevelRequest request) {
 			return blockingUnaryCall(getChannel(), getCheckCOMethod(), getCallOptions(), request);
 		}
 	}
 
-	/**
-	 */
 	public static final class ClimateServiceFutureStub extends io.grpc.stub.AbstractStub<ClimateServiceFutureStub> {
 		private ClimateServiceFutureStub(io.grpc.Channel channel) {
 			super(channel);
@@ -252,15 +212,11 @@ public final class ClimateServiceGrpc {
 			return new ClimateServiceFutureStub(channel, callOptions);
 		}
 
-		/**
-		 */
 		public com.google.common.util.concurrent.ListenableFuture<grpc.services.climate.SwitchResponse> hvacOnOff(
 				grpc.services.climate.SwitchRequest request) {
 			return futureUnaryCall(getChannel().newCall(getHvacOnOffMethod(), getCallOptions()), request);
 		}
 
-		/**
-		 */
 		public com.google.common.util.concurrent.ListenableFuture<grpc.services.climate.ExtractionResponse> checkCO(
 				grpc.services.climate.CoLevelRequest request) {
 			return futureUnaryCall(getChannel().newCall(getCheckCOMethod(), getCallOptions()), request);

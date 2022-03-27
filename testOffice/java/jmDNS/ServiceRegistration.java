@@ -15,11 +15,11 @@ public class ServiceRegistration {
 	public void jmdnsRegister(int climatePort, int lightPort, int utilityPort) throws InterruptedException {
 
 		try {
-			// Creating a JmDNS instance
+			// Creating a jmDNS instance
 			jmdns = JmDNS.create(InetAddress.getLocalHost());
 
-			// Registering all services
-			System.out.println("Register Service");
+			// Register all of the services
+			System.out.println("Service Registration");
 			ServiceInfo serviceUtility = ServiceInfo.create("_http._tcp.local.", "utility", 50098, "path=index.html");
 			ServiceInfo serviceClimate = ServiceInfo.create("_http._tcp.local.", "climate", 50099, "path=index.html");
 			ServiceInfo serviceLight = ServiceInfo.create("_http._tcp.local.", "light", 50097, "path=index.html");
@@ -27,18 +27,18 @@ public class ServiceRegistration {
 			jmdns.registerService(serviceUtility);
 			jmdns.registerService(serviceClimate);
 			jmdns.registerService(serviceLight);
-			System.out.println("Registration Service Starting ! ");
+			System.out.println("Service Registration Underway! ");
 
-			// Waiting a bit
+			// Simulates a short delay
 			Thread.sleep(10000);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	// Unregistering all services
+	// Unregisters all of the services
 	public void unRegister() {
-		System.out.println("Un-registering");
+		System.out.println("Unregistering!");
 		jmdns.unregisterAllServices();
 	}
 }

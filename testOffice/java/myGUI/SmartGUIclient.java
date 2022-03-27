@@ -1,9 +1,40 @@
 package myGUI;
 
-import java.awt.Color;
 import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import grpc.services.climate.ClimateClient;
+import grpc.services.climate.ClimateServiceGrpc;
+import grpc.services.climate.CoLevelRequest;
+import grpc.services.climate.ExtractionResponse;
+import grpc.services.climate.HvacRequest;
+import grpc.services.climate.HvacResponse;
+import grpc.services.climate.SwitchRequest;
+import grpc.services.climate.SwitchResponse;
+import grpc.services.light.IntensityRequest;
+import grpc.services.light.IntensityResponse;
+import grpc.services.light.LightServiceGrpc;
+import grpc.services.light.LightsRequest;
+import grpc.services.light.LightsResponse;
+import grpc.services.utility.CameraRequest;
+import grpc.services.utility.CameraResponse;
+import grpc.services.utility.DevicesRequest;
+import grpc.services.utility.DevicesResponse;
+import grpc.services.utility.PrinterRequest;
+import grpc.services.utility.PrinterResponse;
+import grpc.services.utility.UtilityServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
+import jmDNS.ServiceRegistration;
 import java.awt.Font;
-import java.awt.SystemColor;
+import javax.swing.JTextField;
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
+import javax.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -12,34 +43,27 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceListener;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
+import javax.swing.JSlider;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeListener;
-
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
-import io.grpc.stub.StreamObserver;
-import jmDNS.ServiceRegistration;
+import javax.swing.event.ChangeEvent;
+import java.awt.Color;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import java.awt.SystemColor;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class SmartGUIclient {
 
 	private JFrame frame;
+	private static ClimateServiceGrpc.ClimateServiceBlockingStub cblockingStub;
+	private static ClimateServiceGrpc.ClimateServiceStub casyncStub;
+	private static LightServiceGrpc.LightServiceBlockingStub lblockingStub;
+	private static LightServiceGrpc.LightServiceStub lasyncStub;
+	private static UtilityServiceGrpc.UtilityServiceBlockingStub ublockingStub;
+	private static UtilityServiceGrpc.UtilityServiceStub uasyncStub;
 	private static int climatePort = 50099;
 	private static int lightPort = 50097;
 	private static int utilityPort = 50098;
@@ -95,6 +119,7 @@ public class SmartGUIclient {
 
 		initialize();
 		ServiceRegistration reg = new ServiceRegistration();
+		reg.jmdnsRegister(climatePort, lightPort, utilityPort);
 
 		try {
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
@@ -107,6 +132,18 @@ public class SmartGUIclient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		ManagedChannel climatechannel = ManagedChannelBuilder.forAddress("localhost", 50099).usePlaintext().build();
+		cblockingStub = ClimateServiceGrpc.newBlockingStub(climatechannel);
+		casyncStub = ClimateServiceGrpc.newStub(climatechannel);
+
+		ManagedChannel lightchannel = ManagedChannelBuilder.forAddress("localhost", 50097).usePlaintext().build();
+		lblockingStub = LightServiceGrpc.newBlockingStub(lightchannel);
+		lasyncStub = LightServiceGrpc.newStub(lightchannel);
+
+		ManagedChannel utilitychannel = ManagedChannelBuilder.forAddress("localhost", 50098).usePlaintext().build();
+		ublockingStub = UtilityServiceGrpc.newBlockingStub(utilitychannel);
+		uasyncStub = UtilityServiceGrpc.newStub(utilitychannel);
 	}
 
 	// Initialize the frame
@@ -179,7 +216,7 @@ public class SmartGUIclient {
 		frame.getContentPane().add(messages);
 		messages.setColumns(10);
 
-		// Climate buttons and labels
+		// Climate buttons & labels
 		JLabel hvacLabel = new JLabel("HVAC");
 		hvacLabel.setForeground(SystemColor.desktop);
 		hvacLabel.setBounds(179, 126, 41, 14);
@@ -219,8 +256,10 @@ public class SmartGUIclient {
 			public void stateChanged(ChangeEvent e) {
 				if (hvacOn.isSelected()) {
 					hvacOn.setText("Off");
+					hvacOnOff(true);
 				} else {
 					hvacOn.setText("On");
+					hvacOnOff(false);
 				}
 			}
 		});
@@ -243,7 +282,7 @@ public class SmartGUIclient {
 		btnNewButton.setBounds(317, 258, 46, 23);
 		frame.getContentPane().add(btnNewButton);
 
-		// Utility buttons and labels
+		// Utility buttons & labels
 		JLabel deviceLabel = new JLabel("Devices");
 		deviceLabel.setForeground(SystemColor.desktop);
 		deviceLabel.setBounds(44, 126, 93, 14);
@@ -309,7 +348,7 @@ public class SmartGUIclient {
 			}
 		});
 
-		// Light buttons and labels
+		// Light buttons & labels
 		JLabel lightMainLabel = new JLabel("LIGHTS");
 		lightMainLabel.setForeground(SystemColor.desktop);
 		lightMainLabel.setBounds(257, 304, 85, 22);
@@ -405,37 +444,209 @@ public class SmartGUIclient {
 	}
 
 	// gRPC & HVAC Services
-	public static void hvacOnOff() {
+	public static void hvacOnOff(boolean OnOffH) {
 
+		SwitchRequest request = SwitchRequest.newBuilder().setPower(OnOffH).build();
+		SwitchResponse response;
+
+		try {
+			response = cblockingStub.hvacOnOff(request);
+		} catch (StatusRuntimeException e) {
+			System.out.println("RPC HVAC failed:" + e.getStatus());
+			return;
+		}
+		if (response.getPower()) {
+			messages.setText("HVAC off");
+		} else {
+			messages.setText("HVAC on");
+		}
 	}
 
 	public static void HvacTemperature(Object value) {
+		final int newTemp = (Integer) value;
 
+		HvacRequest request = HvacRequest.newBuilder().setTemp(newTemp).build();
+		System.out.println("Requesting temperature change to " + newTemp + "°C");
+
+		StreamObserver<HvacResponse> responseObserver = new StreamObserver<HvacResponse>() {
+			public void onNext(HvacResponse value) {
+				messages.setText("Changing temperature to: " + value.getTemp() + "°C");
+			}
+
+			public void onError(Throwable t) {
+				t.printStackTrace();
+
+			}
+
+			public void onCompleted() {
+				messages.setText("Room reached the selected temperature: " + newTemp + "°C");
+			}
+		};
+
+		casyncStub.hvacTemperature(request, responseObserver);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void checkCO() {
+		int CoNow = ClimateClient.randomCo;
+
+		CoLevelRequest request = CoLevelRequest.newBuilder().setLevel(CoNow).build();
+
+		ExtractionResponse response;
+		try {
+			response = cblockingStub.checkCO(request);
+		} catch (StatusRuntimeException e) {
+			System.out.println("RPC CO level failed:" + e.getStatus());
+			return;
+		}
+		if (CoNow > 40) {
+			messages.setText("CO level is: " + response.getLevel() + " now");
+			messages.setText("High levels of CO, HVAC on!");
+		} else {
+			messages.setText("CO level: " + response.getLevel());
+			messages.setText("CO level Stable!");
+		}
 
 	}
 
 	// Light Services
 	public void LightsOnOff(boolean onOffLights) {
 
+		LightsRequest request = LightsRequest.newBuilder().setSwitch(onOffLights).build();
+
+		LightsResponse response;
+		try {
+			response = lblockingStub.lightsOnOff(request);
+		} catch (StatusRuntimeException e) {
+			System.out.println("RPC light switch failed:" + e.getStatus());
+			return;
+		}
+
+		Boolean statusLight = response.getSwitch();
+		if (statusLight) {
+			messages.setText("Lights off!");
+		} else {
+			messages.setText("Lights on!");
+		}
 	}
 
 	public void lightIntensity(int bright) {
-		
+		final CountDownLatch finishLatch = new CountDownLatch(1);
+
+		StreamObserver<IntensityRequest> requestObserver = lasyncStub.withDeadlineAfter(2, TimeUnit.SECONDS)
+				.lightIntensity(new StreamObserver<IntensityResponse>() {
+					public void onNext(IntensityResponse value) {
+						messages.setText("Lights intensity changed: " + value.getIntensity());
+					}
+
+					public void onError(Throwable t) {
+						t.printStackTrace();
+						finishLatch.countDown();
+					}
+
+					public void onCompleted() {
+						finishLatch.countDown();
+					}
+				});
+
+		try {
+			requestObserver.onNext(IntensityRequest.newBuilder().setIntensity(bright).build());
+			messages.setText("Lighting adjustment completed");
+			Thread.sleep(1500);
+		} catch (RuntimeException e) {
+			requestObserver.onError(e);
+			throw e;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		requestObserver.onCompleted();
 	}
 
 	// Device Services
 	public static void switchDevices(boolean onOffDevices) {
 
+		DevicesRequest request = DevicesRequest.newBuilder().setDevices(onOffDevices).build();
+
+		DevicesResponse response;
+		try {
+			response = ublockingStub.switchDevices(request);
+		} catch (StatusRuntimeException e) {
+			System.out.println("RPC devices failed:" + e.getStatus());
+			return;
+		}
+		if (response.getDevices()) {
+			messages.setText("Devices off");
+		} else {
+			messages.setText("Devices on");
+		}
 	}
 
 	public static void switchCameraOn(boolean onOffCamera) {
 
-	}
+		CameraRequest request = CameraRequest.newBuilder().setCamera(onOffCamera).build();
 
+		CameraResponse response;
+		try {
+			response = ublockingStub.switchCameraOn(request);
+		} catch (StatusRuntimeException e) {
+			System.out.println("RPC camera failed:" + e.getStatus());
+			return;
+		}
+		if (response.getCamera()) {
+			messages.setText("Camera off!");
+		} else {
+			messages.setText("Camera on!");
+		}
+	}
+	
+	// Prints list of visitors
 	public static void printList() {
 
+		final ArrayList<String> listOfVisits = new ArrayList<String>();
+
+		StreamObserver<PrinterResponse> responseObserver = new StreamObserver<PrinterResponse>() {
+			public void onNext(PrinterResponse value) {
+				listOfVisits.add(value.getPList());
+			}
+
+			public void onError(Throwable t) {
+				System.out.println("gRPC printer failed: " + t.getMessage());
+				t.printStackTrace();
+			}
+
+			public void onCompleted() {
+				System.out.println("List completed");
+				messages.setText("List completed");
+			}
+		};
+
+		StreamObserver<PrinterRequest> requestObserver = uasyncStub.printList(responseObserver);
+		try {
+			requestObserver.onNext(PrinterRequest.newBuilder().setPList("Karl Tallon").build());
+			requestObserver.onNext(PrinterRequest.newBuilder().setPList("Caroline Byrne").build());
+			requestObserver.onNext(PrinterRequest.newBuilder().setPList("Matthew Dwyer").build());
+			requestObserver.onNext(PrinterRequest.newBuilder().setPList("Athanasios Staikopoulos").build());
+			requestObserver.onNext(PrinterRequest.newBuilder().setPList("Magnum PI").build());
+
+			Thread.sleep(1000);
+		} catch (RuntimeException e) {
+			System.out.println("RPC printer failed: " + e.getMessage());
+			requestObserver.onError(e);
+			throw e;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		requestObserver.onCompleted();
+		messages.setText("\nVisitor List: " + listOfVisits.size());
+		for (String visits : listOfVisits) {
+			messages.setText("Printing visit list: ");
+			JOptionPane.showMessageDialog(null, visits);
+			System.out.println("Printing visit list: " + visits);
+		}
 	}
 }

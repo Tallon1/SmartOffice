@@ -11,49 +11,48 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
-//CLIENT IMPLEMENTATION
+// Client Implementation
 public class ClimateClient {
 
 	private static ClimateServiceGrpc.ClimateServiceBlockingStub cblockingStub;
 	private static ClimateServiceGrpc.ClimateServiceStub casyncStub;
 	public static int randomCo = (int) (Math.random() * 100 + 1);
 
-	// Add listener for discovery
+	// Adds a listener for discovery
 	public static class Listener implements ServiceListener {
-		// service resolution
+		// Service resolution
 		public void serviceAdded(ServiceEvent serviceEvent) {
 			System.out.println("Service added: " + serviceEvent.getInfo());
 		}
 
-		// removed service
+		// Removes service
 		public void serviceRemoved(ServiceEvent serviceEvent) {
 			System.out.println("Service removed: " + serviceEvent.getInfo());
 		}
 
-		// service resolved.
+		// Service resolved
 		public void serviceResolved(ServiceEvent serviceEvent) {
 			System.out.println("Service resolved: " + serviceEvent.getInfo());
 			ServiceInfo info = serviceEvent.getInfo();
 			final int Port = serviceEvent.getInfo().getPort();
 			String address = info.getHostAddresses()[0];
-
 		}
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-		// GRPC channels
+		// gRPC channel
 		ManagedChannel climatechannel = ManagedChannelBuilder.forAddress("localhost", 50099).usePlaintext().build();
 
-		// stubs -- generate from proto
+		// Stubs - generated through proto
 		cblockingStub = ClimateServiceGrpc.newBlockingStub(climatechannel);
 		casyncStub = ClimateServiceGrpc.newStub(climatechannel);
 
 		try {
-			// Create a JmDNS instance
+			// Creates a jmDNS instance
 			JmDNS jmdns = JmDNS.create(InetAddress.getLocalHost());
 
-			// Add a service listener
+			// Adds a service listener
 			jmdns.addServiceListener("_http._tcp.local.", new Listener());
 		} catch (UnknownHostException e) {
 			System.out.println(e.getMessage());
@@ -67,11 +66,10 @@ public class ClimateClient {
 
 	}
 
-	/**
-	 * GRPC services
-	 */
 
-	// Switch HVAC
+	 // gRPC services
+
+	// Switch for HVAC
 	public static void hvacOnOff() {
 
 		SwitchRequest request = SwitchRequest.newBuilder().setPower(false).build();
@@ -85,21 +83,21 @@ public class ClimateClient {
 		}
 	}
 
-	// Control temperature
+	// Control for temperature
 	public static void HvacTemperature() {
 
 		final HvacRequest request = HvacRequest.newBuilder().setTemp(20).build();
 		final int newTemp = request.getTemp();
 
-		// notification of method invocation
+		// Notification for method invocation
 		System.out.println("Requesting temperature change to " + request.getTemp() + " °C");
 
 		StreamObserver<HvacResponse> responseObserver = new StreamObserver<HvacResponse>() {
 
-			// minimum and max temperature check
+			// Min & max temperature check
 			public void onNext(HvacResponse value) {
 				if (newTemp > 35 || newTemp < 15) {// start if
-					System.out.println("Select temperature between 15°C and 35°C ");
+					System.out.println("Select temperature between 15°C & 35°C ");
 				} else {
 					System.out.println("Changing temperature to: " + value.getTemp() + " °C");
 				}
@@ -122,12 +120,12 @@ public class ClimateClient {
 		}
 	}
 
-	// Check CO level in the room
+	// Checks CO level in the room
 	public static void checkCO() {
 
 		CoLevelRequest request = CoLevelRequest.newBuilder().setLevel(randomCo).build();
 
-		// if CO level is over 40, extractors will be turned on
+		// If CO level = 40 or more, extractors turn on
 		ExtractionResponse response = cblockingStub.checkCO(request);
 		if (response.getLevel() > 40) {
 			System.out.println("Co level is: " + response.getLevel() + " now");

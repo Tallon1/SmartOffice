@@ -7,12 +7,14 @@ option java_outer_classname = "LightServiceImpl";
 package Light;
 
 service LightService {
+	// Unary RPC
+	rpc lighting (Empty) returns (LightingResponse) {};
 
-	rpc lighting (Empty) returns (LightingResponse) {};//unary RPC 
+	// Unary RPC
+	rpc LightsOnOff (LightsRequest) returns (LightsResponse) {};
 
-	rpc LightsOnOff (LightsRequest) returns (LightsResponse) {};//unary RPC 
-	
-	rpc lightIntensity (stream IntensityRequest) returns (IntensityResponse) {};//client stream RPC missing
+	// Client stream
+	rpc lightIntensity (stream IntensityRequest) returns (IntensityResponse) {};
 }
 
 message LightingResponse{
